@@ -1,0 +1,19 @@
+* text=auto eol=crlf
+
+*.cs text eol=crlf
+*.csproj text eol=crlf
+*.sln text eol=crlf
+*.md text eol=crlf
+*.txt text eol=crlf
+*.json text eol=crlf
+*.gitignore text eol=crlf
+*.gitattributes text eol=crlf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.wav binary
+*.mp3 binary
+*.dll binary
+*.ico binary
+*.resources binary

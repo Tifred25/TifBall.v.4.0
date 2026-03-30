@@ -1,0 +1,15 @@
+{
+  "startLevel": 7,
+  "skipPresentation": true,
+  "skipInitialHighScores": true,
+  "autoStartBall": true,
+  "ballSpawnChance": 0.75,
+  "shotSpawnChance": 0.50,
+  "weightMultipliers": {
+    "MachineGun": 8.0,
+    "InvincibilityBar": 8.0,
+    "Sticky": 6.0,
+    "ThreeBalls": 6.0,
+    "Drunk": 4.0
+  }
+}

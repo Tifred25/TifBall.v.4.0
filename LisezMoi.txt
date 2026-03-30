@@ -1,0 +1,45 @@
+*****************************
+**                         **
+**        TIFBALL          **
+**                         **
+**                         **
+** Copyright © 2007 TiFred **
+**                         **
+**    lepiote21@free.fr    **
+**                         **
+*****************************
+
+** CONDITIONS NECESSAIRES **
+
+Pour pouvoir exécuter ce programme, vous devez installer sur votre ordinateur :
+- .NET Framework 4.8
+- DirectX 9.0c
+
+Remarque importante :
+Si TifBall ne se lance pas après l'installation de .NET Framework et de DirectX,
+il faut vérifier que les DLL Managed DirectX suivantes sont présentes dans le répertoire de TifBall.exe :
+- Microsoft.DirectX.AudioVideoPlayback.dll
+- Microsoft.DirectX.Direct3D.dll
+- Microsoft.DirectX.Direct3DX.dll
+- Microsoft.DirectX.DirectSound.dll
+- Microsoft.DirectX.dll
+
+** MUSIQUE **
+
+Pour avoir de la musique pendant la partie, il faut copier un fichier nommé 'musique.mp3' dans le répertoire de TifBall.exe.
+
+** FICHIER DE PARAMETRES **
+
+Les options sont enregistrées dans le fichier TifBall.settings.xml.
+Le mode d'affichage peut prendre les valeurs suivantes :
+- `Immediate` : affiche les images aussi vite que possible.
+- `ScreenRefresh` : synchronise l'affichage avec la fréquence de l'écran.
+
+** FICHIER SCORE **
+
+Si le fichier Scores.dat est absent ou modifié manuellement, il sera automatiquement régénéré au prochain lancement de TifBall.
+
+** FICHIER LEVEL **
+
+Le fichier Level.txt est modifiable à la main.
+Il suffit de se référer aux explications au début du fichier pour créer de nouveaux levels.

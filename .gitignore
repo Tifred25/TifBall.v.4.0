@@ -1,0 +1,32 @@
+# Build outputs
+bin/
+obj/
+
+# IDE and user-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.rsuser
+*.sln.docstates
+
+# Logs and caches
+*.log
+*.cache
+Thumbs.db
+
+# Local editor settings
+.vscode/
+.idea/
+*.code-workspace
+
+# Legacy migration artifacts
+UpgradeLog*.XML
+UpgradeLog*.htm
+_UpgradeReport_Files/
+
+# Runtime-generated local data
+**/Scores.dat
+**/TifBall.settings.xml
+**/Tifball.ini
+TifBall/power-up-test-settings.local.json
