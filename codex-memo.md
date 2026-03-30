@@ -29,7 +29,6 @@
 - une traînée visuelle légère a aussi été ajoutée à la balle pour mieux percevoir son mouvement à haute vitesse
 - la balle utilise maintenant aussi une interpolation de rendu ciblée entre position précédente et position courante
 - le plein écran et le redimensionnement utilisent maintenant un rendu `scale-to-fit` avec conservation du ratio, au lieu d'un simple centrage à taille fixe
-- en mode fenêtré redimensionnable, le backbuffer suit maintenant la taille réelle de la fenêtre pour que ce `scale-to-fit` exploite bien tout l'espace disponible
 
 ## Structure utile
 
