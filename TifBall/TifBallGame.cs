@@ -476,8 +476,19 @@ internal sealed class TifBallGame : Game
                 foreach (BallState ball in _state.Balls)
                 {
                     Texture2D texture = _state.InvincibleBalls && _invincibleBallTexture != null ? _invincibleBallTexture : _ballTexture;
-                    Rectangle ballTarget = new Rectangle((int)ball.Position.X, (int)ball.Position.Y, _state.CurrentBallSize, _state.CurrentBallSize);
-                    _spriteBatch.Draw(texture, ballTarget, Color.White);
+                    Vector2 ballScale = new Vector2(
+                        _state.CurrentBallSize / (float)texture.Width,
+                        _state.CurrentBallSize / (float)texture.Height);
+                    _spriteBatch.Draw(
+                        texture,
+                        ball.Position,
+                        null,
+                        Color.White,
+                        0f,
+                        Vector2.Zero,
+                        ballScale,
+                        SpriteEffects.None,
+                        0f);
                 }
             }
 
