@@ -20,7 +20,7 @@ Il doit rester précis, concret et fidèle au fonctionnement réel du projet.
 ## Git
 
 - Codex peut créer des commits automatiquement quand le travail demandé est terminé et vérifié
-- Codex peut pousser automatiquement sur le remote configuré sans redemander une validation séparée
+- Codex ne doit pousser sur le remote configuré qu'après une demande explicite du propriétaire du projet
 - les messages de commit doivent rester courts, explicites et cohérents avec la modification réellement livrée
 - les actions Git doivent rester non destructives sauf demande explicite du propriétaire du projet
 - en cas de doute sur une opération risquée ou irréversible, Codex doit s'arrêter et demander confirmation
