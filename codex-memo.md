@@ -45,7 +45,7 @@
   - `origin` -> `https://github.com/Tifred25/TifBall.v.4.0.git`
 - un fichier `AGENTS.md` à la racine formalise désormais la façon de travailler sur ce dépôt
 - `AGENTS.md` précise aussi que la collaboration documentaire se fait en français, tandis que le code et les identifiants techniques restent en anglais
-- `AGENTS.md` autorise les commits automatiques, mais les pushs doivent désormais attendre une demande explicite
+- `AGENTS.md` autorise les commits automatiques, mais les pushs doivent attendre une demande explicite
 
 ## Points de vigilance
 
