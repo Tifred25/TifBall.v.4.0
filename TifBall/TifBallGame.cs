@@ -96,6 +96,7 @@ internal sealed class TifBallGame : Game
     private bool _restartGameAfterHighScoresDismiss;
     private bool _previousDrunkState;
     private Vector2 _renderOffset;
+    private float _renderScale = 1f;
     private bool _musicEnabled = true;
     private bool _soundsEnabled = true;
     private bool _backgroundImagesEnabled = true;
@@ -323,7 +324,8 @@ internal sealed class TifBallGame : Game
 
         if (_paddleTexture != null && !_state.IsPaused)
         {
-            float paddleX = (mouseState.X - _renderOffset.X) - (_state.CurrentPaddleWidth / 2f);
+            Point logicalMousePosition = ScreenToLogicalPoint(mouseState.X, mouseState.Y);
+            float paddleX = logicalMousePosition.X - (_state.CurrentPaddleWidth / 2f);
             float minX = GameAreaX;
             float maxX = GameAreaX + GameAreaWidth - _state.CurrentPaddleWidth;
             if (IsDrunk)
@@ -395,19 +397,15 @@ internal sealed class TifBallGame : Game
 
         if (_spriteBatch != null && _backgroundPixel != null && _borderPixel != null)
         {
-            _spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(_renderOffset.X, _renderOffset.Y, 0f));
+            _spriteBatch.Begin(transformMatrix: GetRenderMatrix());
 
             if (_state.IsShowingPresentation && _presentationScene != null)
             {
                 _spriteBatch.End();
                 Rectangle previousPresentationScissor = GraphicsDevice.ScissorRectangle;
-                GraphicsDevice.ScissorRectangle = new Rectangle(
-                    (int)_renderOffset.X + GameAreaX,
-                    (int)_renderOffset.Y + GameAreaY,
-                    GameAreaWidth,
-                    GameAreaHeight);
+                GraphicsDevice.ScissorRectangle = TransformLogicalRectangleToScreen(new Rectangle(GameAreaX, GameAreaY, GameAreaWidth, GameAreaHeight));
                 _spriteBatch.Begin(
-                    transformMatrix: Matrix.CreateTranslation(_renderOffset.X, _renderOffset.Y, 0f),
+                    transformMatrix: GetRenderMatrix(),
                     rasterizerState: new RasterizerState { ScissorTestEnable = true });
                 _presentationScene.Draw(_spriteBatch, new Rectangle(GameAreaX, GameAreaY, GameAreaWidth, GameAreaHeight));
                 DrawAboutOverlay();
@@ -452,13 +450,9 @@ internal sealed class TifBallGame : Game
             _spriteBatch.End();
 
             Rectangle previousScissor = GraphicsDevice.ScissorRectangle;
-            GraphicsDevice.ScissorRectangle = new Rectangle(
-                (int)_renderOffset.X + GameAreaX,
-                (int)_renderOffset.Y + GameAreaY,
-                GameAreaWidth,
-                GameAreaHeight);
+            GraphicsDevice.ScissorRectangle = TransformLogicalRectangleToScreen(new Rectangle(GameAreaX, GameAreaY, GameAreaWidth, GameAreaHeight));
             _spriteBatch.Begin(
-                transformMatrix: Matrix.CreateTranslation(_renderOffset.X, _renderOffset.Y, 0f),
+                transformMatrix: GetRenderMatrix(),
                 rasterizerState: new RasterizerState { ScissorTestEnable = true });
             if (_paddleTexture != null)
             {
@@ -539,7 +533,7 @@ internal sealed class TifBallGame : Game
             _spriteBatch.End();
             GraphicsDevice.ScissorRectangle = previousScissor;
 
-            _spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(_renderOffset.X, _renderOffset.Y, 0f));
+            _spriteBatch.Begin(transformMatrix: GetRenderMatrix());
             DrawHud();
             DrawAboutOverlay();
             _spriteBatch.End();
@@ -547,13 +541,9 @@ internal sealed class TifBallGame : Game
             if (_state.IsLevelTransitioning && _hudRenderer != null)
             {
                 Rectangle previousTransitionScissor = GraphicsDevice.ScissorRectangle;
-                GraphicsDevice.ScissorRectangle = new Rectangle(
-                    (int)_renderOffset.X + GameAreaX,
-                    (int)_renderOffset.Y + GameAreaY,
-                    GameAreaWidth,
-                    GameAreaHeight);
+                GraphicsDevice.ScissorRectangle = TransformLogicalRectangleToScreen(new Rectangle(GameAreaX, GameAreaY, GameAreaWidth, GameAreaHeight));
                 _spriteBatch.Begin(
-                    transformMatrix: Matrix.CreateTranslation(_renderOffset.X, _renderOffset.Y, 0f),
+                    transformMatrix: GetRenderMatrix(),
                     rasterizerState: new RasterizerState { ScissorTestEnable = true });
                 _hudRenderer.DrawLevelTransition(_spriteBatch, _state.CurrentLevel, _state.LevelTransitionY);
                 _spriteBatch.End();
@@ -990,8 +980,13 @@ internal sealed class TifBallGame : Game
 
     private void UpdateRenderOffset()
     {
-        float offsetX = Math.Max(0f, (GraphicsDevice.Viewport.Width - WindowedBackBufferWidth) / 2f);
-        float offsetY = Math.Max(0f, (GraphicsDevice.Viewport.Height - WindowedBackBufferHeight) / 2f);
+        float scaleX = GraphicsDevice.Viewport.Width / (float)WindowedBackBufferWidth;
+        float scaleY = GraphicsDevice.Viewport.Height / (float)WindowedBackBufferHeight;
+        _renderScale = Math.Min(scaleX, scaleY);
+        float scaledWidth = WindowedBackBufferWidth * _renderScale;
+        float scaledHeight = WindowedBackBufferHeight * _renderScale;
+        float offsetX = Math.Max(0f, (GraphicsDevice.Viewport.Width - scaledWidth) / 2f);
+        float offsetY = Math.Max(0f, (GraphicsDevice.Viewport.Height - scaledHeight) / 2f);
         _renderOffset = new Vector2(offsetX, offsetY);
     }
 
@@ -1014,14 +1009,14 @@ internal sealed class TifBallGame : Game
     private int GetNormalCursorXForCurrentPaddle()
     {
         float paddleCenter = _paddlePosition.X + (_state.CurrentPaddleWidth / 2f);
-        float screenX = _renderOffset.X + paddleCenter;
+        float screenX = _renderOffset.X + (paddleCenter * _renderScale);
         return Math.Clamp((int)MathF.Round(screenX), 0, GraphicsDevice.Viewport.Width - 1);
     }
 
     private int GetMirroredCursorXForCurrentPaddle()
     {
         float mirroredCenter = GameAreaX + GameAreaWidth - (_paddlePosition.X - GameAreaX) - (_state.CurrentPaddleWidth / 2f);
-        float screenX = _renderOffset.X + mirroredCenter;
+        float screenX = _renderOffset.X + (mirroredCenter * _renderScale);
         return Math.Clamp((int)MathF.Round(screenX), 0, GraphicsDevice.Viewport.Width - 1);
     }
 
@@ -1213,9 +1208,7 @@ internal sealed class TifBallGame : Game
     {
         bool didChange = false;
         bool leftClickPressed = mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
-        Point logicalMousePosition = new(
-            (int)MathF.Round(mouseState.X - _renderOffset.X),
-            (int)MathF.Round(mouseState.Y - _renderOffset.Y));
+        Point logicalMousePosition = ScreenToLogicalPoint(mouseState.X, mouseState.Y);
 
         if (WasKeyPressed(Keys.Left, keyboardState))
         {
@@ -1470,6 +1463,28 @@ internal sealed class TifBallGame : Game
             ballScale,
             SpriteEffects.None,
             0f);
+    }
+
+    private Matrix GetRenderMatrix()
+    {
+        return Matrix.CreateScale(_renderScale, _renderScale, 1f)
+            * Matrix.CreateTranslation(_renderOffset.X, _renderOffset.Y, 0f);
+    }
+
+    private Rectangle TransformLogicalRectangleToScreen(Rectangle logicalRectangle)
+    {
+        int x = (int)MathF.Round(_renderOffset.X + (logicalRectangle.X * _renderScale));
+        int y = (int)MathF.Round(_renderOffset.Y + (logicalRectangle.Y * _renderScale));
+        int width = Math.Max(1, (int)MathF.Round(logicalRectangle.Width * _renderScale));
+        int height = Math.Max(1, (int)MathF.Round(logicalRectangle.Height * _renderScale));
+        return new Rectangle(x, y, width, height);
+    }
+
+    private Point ScreenToLogicalPoint(int screenX, int screenY)
+    {
+        float logicalX = (screenX - _renderOffset.X) / _renderScale;
+        float logicalY = (screenY - _renderOffset.Y) / _renderScale;
+        return new Point((int)MathF.Round(logicalX), (int)MathF.Round(logicalY));
     }
 
     private Rectangle GetLeftMachineGunTarget()
