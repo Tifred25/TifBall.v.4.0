@@ -27,6 +27,7 @@
 - le build `Release` ne doit pas embarquer ce fichier local de test dans son dossier de sortie final
 - un premier correctif de fluidité visuelle a été appliqué à la balle : le rendu utilise maintenant sa position flottante au lieu d'un rectangle tronqué au pixel entier
 - une traînée visuelle légère a aussi été ajoutée à la balle pour mieux percevoir son mouvement à haute vitesse
+- la balle utilise maintenant aussi une interpolation de rendu ciblée entre position précédente et position courante
 
 ## Structure utile
 

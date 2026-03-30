@@ -49,6 +49,7 @@ internal sealed class TifBallGame : Game
     private const int ThreeHitBrickDestroyScore = 1000;
     private const int IndestructibleBrickDestroyScore = 4000;
     private const int IndestructibleBrickHitPoints = 20;
+    private const float BallRenderInterpolationFactor = 0.85f;
     private const float BallTrailSpacingPixels = 5f;
     private const string ApplicationVersion = "3.0.0";
     private const string WindowBaseTitle = "TifBall v3.0";
@@ -478,13 +479,14 @@ internal sealed class TifBallGame : Game
                 foreach (BallState ball in _state.Balls)
                 {
                     Texture2D texture = _state.InvincibleBalls && _invincibleBallTexture != null ? _invincibleBallTexture : _ballTexture;
+                    Vector2 renderPosition = Vector2.Lerp(ball.PreviousPosition, ball.Position, BallRenderInterpolationFactor);
                     Vector2 ballScale = new Vector2(
                         _state.CurrentBallSize / (float)texture.Width,
                         _state.CurrentBallSize / (float)texture.Height);
-                    DrawBallTrail(texture, ball, ballScale);
+                    DrawBallTrail(texture, renderPosition, ball, ballScale);
                     _spriteBatch.Draw(
                         texture,
-                        ball.Position,
+                        renderPosition,
                         null,
                         Color.White,
                         0f,
@@ -1433,7 +1435,7 @@ internal sealed class TifBallGame : Game
             _applicationVersionText);
     }
 
-    private void DrawBallTrail(Texture2D texture, BallState ball, Vector2 ballScale)
+    private void DrawBallTrail(Texture2D texture, Vector2 renderPosition, BallState ball, Vector2 ballScale)
     {
         if (_spriteBatch == null || !ball.IsLaunched)
         {
@@ -1447,8 +1449,8 @@ internal sealed class TifBallGame : Game
         }
 
         Vector2 direction = Vector2.Normalize(ball.Velocity);
-        DrawBallGhost(texture, ball.Position - (direction * BallTrailSpacingPixels), ballScale, 0.18f);
-        DrawBallGhost(texture, ball.Position - (direction * BallTrailSpacingPixels * 2f), ballScale, 0.10f);
+        DrawBallGhost(texture, renderPosition - (direction * BallTrailSpacingPixels), ballScale, 0.18f);
+        DrawBallGhost(texture, renderPosition - (direction * BallTrailSpacingPixels * 2f), ballScale, 0.10f);
     }
 
     private void DrawBallGhost(Texture2D texture, Vector2 position, Vector2 ballScale, float alpha)

@@ -402,7 +402,11 @@ internal sealed class GameplayCoordinator
                 continue;
             }
 
-            ball = ball with { Position = ball.Position + (ball.Velocity * deltaSeconds) };
+            ball = ball with
+            {
+                PreviousPosition = ball.Position,
+                Position = ball.Position + (ball.Velocity * deltaSeconds)
+            };
             ball = HandleWallBounce(ball);
             ball = HandlePaddleBounce(ball, paddleBounds, paddlePosition, playSound);
             ball = HandleBrickCollisions(ball, advanceToNextLevel, refreshHudTitle, playSound);
@@ -469,13 +473,13 @@ internal sealed class GameplayCoordinator
             }
 
             Vector2 baseVelocity = ball.IsLaunched ? ball.Velocity : new Vector2(InitialBallSpeed * 0.35f, -InitialBallSpeed);
-            _state.Balls.Add(new BallState(ball.Position, new Vector2(-baseVelocity.X, baseVelocity.Y), ball.IsLaunched, ball.StuckPaddleOffset, 0));
+            _state.Balls.Add(new BallState(ball.Position, ball.Position, new Vector2(-baseVelocity.X, baseVelocity.Y), ball.IsLaunched, ball.StuckPaddleOffset, 0));
             if (_state.Balls.Count >= MaxBalls)
             {
                 break;
             }
 
-            _state.Balls.Add(new BallState(ball.Position, new Vector2(baseVelocity.X, -baseVelocity.Y), ball.IsLaunched, ball.StuckPaddleOffset, 0));
+            _state.Balls.Add(new BallState(ball.Position, ball.Position, new Vector2(baseVelocity.X, -baseVelocity.Y), ball.IsLaunched, ball.StuckPaddleOffset, 0));
         }
     }
 

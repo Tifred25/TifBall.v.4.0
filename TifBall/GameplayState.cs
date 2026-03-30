@@ -60,7 +60,7 @@ internal sealed class GameplayState
 
 internal readonly record struct BrickState(Rectangle Bounds, int Type, int HitPoints);
 internal readonly record struct FallingPowerUpState(PowerUpType Type, Vector2 Position, Vector2 Velocity, int Width, int Height);
-internal readonly record struct BallState(Vector2 Position, Vector2 Velocity, bool IsLaunched, float StuckPaddleOffset, int BrickHitCount);
+internal readonly record struct BallState(Vector2 PreviousPosition, Vector2 Position, Vector2 Velocity, bool IsLaunched, float StuckPaddleOffset, int BrickHitCount);
 internal readonly record struct ShotState(Vector2 Position, int Width, int Height);
 internal readonly record struct FloatingScoreState(int Score, Vector2 Position, float RemainingSeconds);
 

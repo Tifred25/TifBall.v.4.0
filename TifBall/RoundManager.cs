@@ -113,6 +113,9 @@ internal sealed class RoundManager
             {
                 _state.Balls[i] = _state.Balls[i] with
                 {
+                    PreviousPosition = new Vector2(
+                        paddlePosition.X + _state.Balls[i].StuckPaddleOffset,
+                        _gameAreaY + _paddleY - _state.CurrentBallSize),
                     Position = new Vector2(
                         paddlePosition.X + _state.Balls[i].StuckPaddleOffset,
                         _gameAreaY + _paddleY - _state.CurrentBallSize)
@@ -135,6 +138,7 @@ internal sealed class RoundManager
                 float launchSpeed = _initialBallSpeed * _initialBallSpeedMultiplier;
                 _state.Balls[i] = _state.Balls[i] with
                 {
+                    PreviousPosition = ball.Position,
                     IsLaunched = true,
                     Velocity = new Vector2(
                         launchSpeed * impact,
@@ -156,7 +160,8 @@ internal sealed class RoundManager
     {
         _state.Balls.Clear();
         float initialOffset = _state.CurrentPaddleWidth / 4f;
-        _state.Balls.Add(new BallState(CreateInitialBallPosition(paddlePosition, initialOffset), Vector2.Zero, false, initialOffset, 0));
+        Vector2 initialPosition = CreateInitialBallPosition(paddlePosition, initialOffset);
+        _state.Balls.Add(new BallState(initialPosition, initialPosition, Vector2.Zero, false, initialOffset, 0));
     }
 
     private Vector2 CreateInitialBallPosition(Vector2 paddlePosition, float paddleOffset)
