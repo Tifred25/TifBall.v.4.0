@@ -41,6 +41,7 @@
   - `d5cf03e` `Initial state: TifBall v4.0`
 - remote configuré :
   - `origin` -> `https://github.com/Tifred25/TifBall.v.4.0.git`
+- un fichier `AGENTS.md` à la racine formalise désormais la façon de travailler sur ce dépôt
 
 ## Points de vigilance
 
@@ -48,6 +49,7 @@
 - le build `Release` doit être vérifié avant publication pour s'assurer que ce fichier local de test n'est pas présent dans `bin\Release\net8.0`
 - le projet a hérité d'une base de code stabilisée en fin de migration; les futures évolutions doivent éviter de réintroduire des reliquats de migration ou de legacy inutile
 - si une nouvelle publication majeure est préparée, penser à garder la documentation alignée sur `v4.0` et non plus sur `v3.0`
+- `codex-memo.md` doit être mis à jour à chaque commit, conformément à `AGENTS.md`
 
 ## Prochaine étape recommandée
 
