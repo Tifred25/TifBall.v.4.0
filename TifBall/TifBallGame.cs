@@ -49,6 +49,7 @@ internal sealed class TifBallGame : Game
     private const int ThreeHitBrickDestroyScore = 1000;
     private const int IndestructibleBrickDestroyScore = 4000;
     private const int IndestructibleBrickHitPoints = 20;
+    private const float BallTrailSpacingPixels = 5f;
     private const string ApplicationVersion = "3.0.0";
     private const string WindowBaseTitle = "TifBall v3.0";
     private static readonly string PowerUpTestSettingsPath = Path.Combine(AppContext.BaseDirectory, "power-up-test-settings.local.json");
@@ -480,6 +481,7 @@ internal sealed class TifBallGame : Game
                     Vector2 ballScale = new Vector2(
                         _state.CurrentBallSize / (float)texture.Width,
                         _state.CurrentBallSize / (float)texture.Height);
+                    DrawBallTrail(texture, ball, ballScale);
                     _spriteBatch.Draw(
                         texture,
                         ball.Position,
@@ -1429,6 +1431,43 @@ internal sealed class TifBallGame : Game
             new Rectangle(GameAreaX, GameAreaY, GameAreaWidth, GameAreaHeight),
             _ballTexture,
             _applicationVersionText);
+    }
+
+    private void DrawBallTrail(Texture2D texture, BallState ball, Vector2 ballScale)
+    {
+        if (_spriteBatch == null || !ball.IsLaunched)
+        {
+            return;
+        }
+
+        float speed = ball.Velocity.Length();
+        if (speed <= 0.01f)
+        {
+            return;
+        }
+
+        Vector2 direction = Vector2.Normalize(ball.Velocity);
+        DrawBallGhost(texture, ball.Position - (direction * BallTrailSpacingPixels), ballScale, 0.18f);
+        DrawBallGhost(texture, ball.Position - (direction * BallTrailSpacingPixels * 2f), ballScale, 0.10f);
+    }
+
+    private void DrawBallGhost(Texture2D texture, Vector2 position, Vector2 ballScale, float alpha)
+    {
+        if (_spriteBatch == null)
+        {
+            return;
+        }
+
+        _spriteBatch.Draw(
+            texture,
+            position,
+            null,
+            Color.White * alpha,
+            0f,
+            Vector2.Zero,
+            ballScale,
+            SpriteEffects.None,
+            0f);
     }
 
     private Rectangle GetLeftMachineGunTarget()
