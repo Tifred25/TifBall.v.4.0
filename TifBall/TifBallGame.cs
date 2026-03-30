@@ -109,6 +109,7 @@ internal sealed class TifBallGame : Game
             DefaultPaddleWidth,
             DefaultBallSize,
             InitialBallSpeed,
+            GetInitialBallSpeedMultiplier(),
             GameAreaX,
             GameAreaY,
             GameAreaWidth,
@@ -872,6 +873,16 @@ internal sealed class TifBallGame : Game
         }
 
         return _state.CurrentLevel;
+    }
+
+    private float GetInitialBallSpeedMultiplier()
+    {
+        if (_powerUpTestSettings?.InitialBallSpeedMultiplier is float configuredMultiplier && configuredMultiplier > 0f)
+        {
+            return configuredMultiplier;
+        }
+
+        return 1f;
     }
 
     private void ApplyStartupTestSettings()

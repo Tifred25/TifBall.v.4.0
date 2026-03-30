@@ -15,6 +15,7 @@ internal sealed class RoundManager
     private readonly int _gameAreaWidth;
     private readonly int _paddleY;
     private readonly Action _resetLevelTransition;
+    private readonly float _initialBallSpeedMultiplier;
 
     public RoundManager(
         GameplayState state,
@@ -22,6 +23,7 @@ internal sealed class RoundManager
         int defaultPaddleWidth,
         int defaultBallSize,
         float initialBallSpeed,
+        float initialBallSpeedMultiplier,
         int gameAreaX,
         int gameAreaY,
         int gameAreaWidth,
@@ -33,6 +35,7 @@ internal sealed class RoundManager
         _defaultPaddleWidth = defaultPaddleWidth;
         _defaultBallSize = defaultBallSize;
         _initialBallSpeed = initialBallSpeed;
+        _initialBallSpeedMultiplier = initialBallSpeedMultiplier;
         _gameAreaX = gameAreaX;
         _gameAreaY = gameAreaY;
         _gameAreaWidth = gameAreaWidth;
@@ -129,12 +132,13 @@ internal sealed class RoundManager
                 float paddleCenter = paddleX + (_state.CurrentPaddleWidth / 2f);
                 float ballCenter = ball.Position.X + (_state.CurrentBallSize / 2f);
                 float impact = MathHelper.Clamp((ballCenter - paddleCenter) / (_state.CurrentPaddleWidth / 2f), -1f, 1f);
+                float launchSpeed = _initialBallSpeed * _initialBallSpeedMultiplier;
                 _state.Balls[i] = _state.Balls[i] with
                 {
                     IsLaunched = true,
                     Velocity = new Vector2(
-                        _initialBallSpeed * impact,
-                        -Math.Abs(_initialBallSpeed * (1f - Math.Abs(impact) * 0.35f)))
+                        launchSpeed * impact,
+                        -Math.Abs(launchSpeed * (1f - Math.Abs(impact) * 0.35f)))
                 };
             }
         }

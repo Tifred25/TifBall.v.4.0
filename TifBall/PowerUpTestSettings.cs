@@ -10,6 +10,7 @@ internal sealed class PowerUpTestSettings
     public bool? SkipPresentation { get; init; }
     public bool? SkipInitialHighScores { get; init; }
     public bool? AutoStartBall { get; init; }
+    public float? InitialBallSpeedMultiplier { get; init; }
     public float? BallSpawnChance { get; init; }
     public float? ShotSpawnChance { get; init; }
     public Dictionary<string, float>? WeightMultipliers { get; init; }

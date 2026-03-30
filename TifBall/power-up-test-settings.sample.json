@@ -3,6 +3,7 @@
   "skipPresentation": true,
   "skipInitialHighScores": true,
   "autoStartBall": true,
+  "initialBallSpeedMultiplier": 2.0,
   "ballSpawnChance": 0.75,
   "shotSpawnChance": 0.50,
   "weightMultipliers": {
