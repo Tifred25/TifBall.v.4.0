@@ -15,6 +15,7 @@ Il doit rester précis, concret et fidèle au fonctionnement réel du projet.
 
 - la langue de travail par défaut est le français
 - les messages de suivi, les explications, les résumés et les documents de collaboration doivent être rédigés en français, sauf besoin spécifique contraire
+- le code source, les identifiants techniques, les noms de types, de méthodes, de variables, de fichiers techniques et les messages destinés au développement doivent rester en anglais, sauf contrainte particulière déjà présente dans le projet
 
 ## Git
 
