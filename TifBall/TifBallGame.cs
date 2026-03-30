@@ -97,6 +97,7 @@ internal sealed class TifBallGame : Game
     private bool _previousDrunkState;
     private Vector2 _renderOffset;
     private float _renderScale = 1f;
+    private bool _isSynchronizingWindowSize;
     private bool _musicEnabled = true;
     private bool _soundsEnabled = true;
     private bool _backgroundImagesEnabled = true;
@@ -148,7 +149,7 @@ internal sealed class TifBallGame : Game
         _graphics.PreferredBackBufferHeight = WindowedBackBufferHeight;
         _graphics.SynchronizeWithVerticalRetrace = true;
         Window.AllowUserResizing = true;
-        Window.ClientSizeChanged += (_, _) => UpdateRenderOffset();
+        Window.ClientSizeChanged += (_, _) => OnClientSizeChanged();
 
         Window.Title = WindowBaseTitle;
         IsMouseVisible = true;
@@ -976,6 +977,42 @@ internal sealed class TifBallGame : Game
         _graphics.ApplyChanges();
         UpdateRenderOffset();
         UpdateNativeOptionsMenuState();
+    }
+
+    private void OnClientSizeChanged()
+    {
+        if (_isSynchronizingWindowSize)
+        {
+            return;
+        }
+
+        if (_graphics.IsFullScreen)
+        {
+            UpdateRenderOffset();
+            return;
+        }
+
+        int clientWidth = Math.Max(1, Window.ClientBounds.Width);
+        int clientHeight = Math.Max(1, Window.ClientBounds.Height);
+        if (_graphics.PreferredBackBufferWidth == clientWidth && _graphics.PreferredBackBufferHeight == clientHeight)
+        {
+            UpdateRenderOffset();
+            return;
+        }
+
+        _isSynchronizingWindowSize = true;
+        try
+        {
+            _graphics.PreferredBackBufferWidth = clientWidth;
+            _graphics.PreferredBackBufferHeight = clientHeight;
+            _graphics.ApplyChanges();
+        }
+        finally
+        {
+            _isSynchronizingWindowSize = false;
+        }
+
+        UpdateRenderOffset();
     }
 
     private void UpdateRenderOffset()
